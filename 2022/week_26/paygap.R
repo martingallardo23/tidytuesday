@@ -60,13 +60,13 @@ gg <- plotdata |>
                    y = employer_size, yend = employer_size)) +
   geom_label(data = subset(plotdata, mean > 0), 
             aes(x = mean + 14, label = paste0("+", round(mean,1),"%"),
-                y = employer_size, color = "red"), 
+                y = employer_size), 
             size = 1.6, color = "#433B37", fill = "#FCF5EE", 
             family = font1, inherit.aes = FALSE, label.size = NA) +
   geom_label(data = subset(plotdata, mean < 0), 
              aes(x = mean - 14, label = paste0(round(mean,1),"%"),
-                 y = employer_size, color = "red"), 
-             size = 1.6, color = "#917C78", fill = "#FCF5EE", 
+                 y = employer_size), 
+             size = 1.6, color = "#433B37", fill = "#FCF5EE", 
              family = font1, inherit.aes = FALSE, label.size = NA) +
   facet_wrap( ~ section_label, ncol = 4)  +
   scale_color_gradient(low = "#F57E00", high = "#419D78",
