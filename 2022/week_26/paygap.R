@@ -46,6 +46,9 @@ plotdata <- paygap |>
            strwrap(25) |> 
            paste(collapse = '\n'))
 
+font1 <- "Fira Sans"
+font2 <- "Source Serif Pro"
+
 gg <- plotdata |> 
   ggplot(aes(x = mean, y = employer_size, color = mean)) + 
   geom_segment(aes(x = -35,           xend = 35, 
@@ -59,12 +62,12 @@ gg <- plotdata |>
             aes(x = mean + 14, label = paste0("+", round(mean,1),"%"),
                 y = employer_size, color = "red"), 
             size = 1.6, color = "#433B37", fill = "#FCF5EE", 
-            family = "Fira Sans", inherit.aes = FALSE, label.size = NA) +
+            family = font1, inherit.aes = FALSE, label.size = NA) +
   geom_label(data = subset(plotdata, mean < 0), 
              aes(x = mean - 14, label = paste0(round(mean,1),"%"),
                  y = employer_size, color = "red"), 
              size = 1.6, color = "#917C78", fill = "#FCF5EE", 
-             family = "Fira Sans", inherit.aes = FALSE, label.size = NA) +
+             family = font1, inherit.aes = FALSE, label.size = NA) +
   facet_wrap( ~ section_label, ncol = 4)  +
   scale_color_gradient(low = "#F57E00", high = "#419D78",
                        limits = c(-5, 35),
@@ -85,30 +88,30 @@ gg <- plotdata |>
        caption  = "github.com/martingallardo23") +
   theme(plot.background    = element_rect(fill = "#FCF5EE", color = NA),
         plot.margin        = margin(30, 70, 30, 30),
-        plot.title         = element_text(family = "Source Serif Pro",
+        plot.title         = element_text(family = font2,
                                           face   = "bold",
                                           color  = "#2D3047",
                                           size   = 30,
                                           hjust  = 0.5,
                                           margin = margin(0, 0, 10, 0)),
-        plot.subtitle      = element_text(family = "Source Serif Pro",
+        plot.subtitle      = element_text(family = font2,
                                           hjust  = 0.5,
                                           margin = margin(0, 0, 10, 0)),
-        plot.caption       = element_text(family = "Source Serif Pro Light",
+        plot.caption       = element_text(family = paste(font2, "Light"),
                                           hjust  = 0.5,
                                           vjust  = 0),
         legend.position    = c(0.66, 0.06),
         legend.direction   = "horizontal",
         legend.title.align = 0.5,
-        legend.text        = element_text(family = "Fira Sans"),
-        legend.title       = element_text(family = "Fira Sans",
+        legend.text        = element_text(family = font1),
+        legend.title       = element_text(family = font1,
                                           face   = "bold",
                                           color  = "#2D3047",
                                           size   = 10),
-        strip.text.x       = element_text(size  =  7, family = "Fira Sans SemiBold"),
-        axis.text.y        = element_text(size  =  6, family = "Fira Sans"),
-        axis.text.x        = element_text(size  =  4, family = "Fira Sans"),
-        axis.title.y       = element_text(angle = 90, family = "Fira Sans",
+        strip.text.x       = element_text(size  =  7, family = paste(font1, "SemiBold")),
+        axis.text.y        = element_text(size  =  6, family = font1),
+        axis.text.x        = element_text(size  =  4, family = font1),
+        axis.title.y       = element_text(angle = 90, family = font1,
                                           margin = margin(0, 5, 0, 0)))
 
 width  <- 1750
