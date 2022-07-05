@@ -8,7 +8,7 @@ tuesdata <- tidytuesdayR::tt_load(2022, week = 26)
 
 paygap <- tuesdata$paygap
 
-sicdata <- read_csv("data/uk-sic-2007-condensed.csv") %>% 
+sicdata <- read_csv("data/uk-sic-2007-condensed.csv") |> 
   mutate(sic_code = str_pad(sic_code, 5, "left", 0)) 
 
 levels <- c("Less than 250",
@@ -19,20 +19,20 @@ labels <- c("<250",
             "250 - 499", "500 - 999", "1,000 - 4,999",
             "5,000 - 19,999", ">20,000")
 
-paygap <- paygap %>% 
-  filter(employer_size != "Not Provided") %>% 
+paygap <- paygap |> 
+  filter(employer_size != "Not Provided") |> 
   mutate(sics          = str_split(sic_codes,pattern = ":"),
          employer_size = factor(employer_size, 
                                 levels = levels,
-                                labels = labels)) %>% 
-  unnest(sics) %>% 
-  mutate(sics = str_pad(sics, 5, "left", 0)) %>% 
+                                labels = labels)) |> 
+  unnest(sics) |> 
+  mutate(sics = str_pad(sics, 5, "left", 0)) |> 
   inner_join(sicdata, by = c("sics" = "sic_code"))
 
-plotdata <- paygap %>% 
-  group_by(section_description, employer_size) %>%
-  summarise(mean = mean(diff_mean_hourly_percent, na.rm = TRUE)) %>% 
-  rowwise() %>% 
+plotdata <- paygap |> 
+  group_by(section_description, employer_size) |>
+  summarise(mean = mean(diff_mean_hourly_percent, na.rm = TRUE)) |> 
+  rowwise() |> 
   mutate(section_label = 
            case_when(section_description == 
                        "Water supply, sewerage, waste management and" ~
@@ -41,12 +41,12 @@ plotdata <- paygap %>%
                        "Activities of extraterritorial organisations and" ~
                        "Activities of extraterritorial organisations",
                      TRUE ~ section_description),
-         section_label = section_label %>% 
-           str_remove(";.*") %>% 
-           strwrap(25) %>% 
+         section_label = section_label |> 
+           str_remove(";.*") |> 
+           strwrap(25) |> 
            paste(collapse = '\n'))
 
-(gg <- plotdata %>% 
+gg <- plotdata |> 
   ggplot(aes(x = mean, y = employer_size, color = mean)) + 
   geom_segment(aes(x = -35,           xend = 35, 
                    y = employer_size, yend = employer_size),
@@ -109,10 +109,13 @@ plotdata <- paygap %>%
         axis.text.y        = element_text(size  =  6, family = "Fira Sans"),
         axis.text.x        = element_text(size  =  4, family = "Fira Sans"),
         axis.title.y       = element_text(angle = 90, family = "Fira Sans",
-                                          margin = margin(0, 5, 0, 0))))
+                                          margin = margin(0, 5, 0, 0)))
 
-ggsave("plot/paygap.png", gg, width = 1750, height = 2000, units = "px",
+width  <- 1750
+height <- 2000
+
+ggsave("plot/paygap.png", gg, width = width, height = height, units = "px",
        dpi = 250)
 
-ggsave("plot/paygap.pdf", gg, width = 1750, height = 2000, units = "px",
+ggsave("plot/paygap.pdf", gg, width = width, height = height, units = "px",
        dpi = 250, device = cairo_pdf)
